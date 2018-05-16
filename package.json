@@ -1,0 +1,14 @@
+{
+  "name": "params-validator",
+  "version": "1.0.0",
+  "description": "Библиотека для проверки параметров",
+  "main": "./src/params-validator.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node ./test/test.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
