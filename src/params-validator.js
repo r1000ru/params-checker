@@ -5,6 +5,7 @@ var StringParam = function(required, nullable, min, max) {
     this._max = max || Infinity;
 }
 
+
 var NumberParam = function(required, nullable, min, max) {
     this._required = required;
     this._nullable = nullable;
@@ -31,7 +32,14 @@ var ObjectParam = function(required, nullable, content) {
     this._content = content;
 }
 
+var EnumParam = function(required, nullable, content) {
+    this._required = required;
+    this._nullable = nullable;
+    this._content = content;
+}
+
 StringParam.prototype.check = function(param, key) {
+    key = key || 'Param';
     // Если параметр не передан
     if (param === undefined) {
         if (this._required) {
@@ -65,6 +73,7 @@ StringParam.prototype.check = function(param, key) {
 
 
 NumberParam.prototype.check = function(param, key) {
+    key = key || 'Param';
     // Если параметр не передан
     if (param === undefined) {
         if (this._required) {
@@ -100,6 +109,7 @@ NumberParam.prototype.check = function(param, key) {
 
 
 BooleanParam.prototype.check = function(param, key) {
+    key = key || 'Param';
     // Если параметр не передан
     if (param === undefined) {
         if (this._required) {
@@ -126,6 +136,7 @@ BooleanParam.prototype.check = function(param, key) {
 
 
 ArrayParam.prototype.check = function(param, key) {
+    key = key || 'Param';
     // Если параметр не передан
     if (param === undefined) {
         if (this._required) {
@@ -164,6 +175,7 @@ ArrayParam.prototype.check = function(param, key) {
 }
 
 ObjectParam.prototype.check = function(param, key) {
+    key = key || 'Param';
     // Если параметр не передан
     if (param === undefined) {
         if (this._required) {
@@ -196,6 +208,31 @@ ObjectParam.prototype.check = function(param, key) {
     }
     
     return result;
+}
+
+EnumParam.prototype.check = function(param, key) {
+    key = key || 'Param';
+    // Если параметр не передан
+    if (param === undefined) {
+        if (this._required) {
+            throw new Error(key + ' is required');
+        }
+        return param;
+    }
+
+    // Если параметр равен null
+    if (param === null) {
+        if (!this._nullable) {
+            throw new Error(key + ' is not nullable');
+        }
+        return null;
+    }
+
+    if (this._content.indexOf(param) === -1) {
+        throw new Error(key + ' is not in enum list');
+    }
+
+    return param;
 }
 
 /**
@@ -255,4 +292,15 @@ module.exports.arr = function(required, nullable, min, max, rule) {
  */
 module.exports.obj = function(required, nullable, content) {
     return new ObjectParam(required, nullable, content);
+}
+
+/**
+ * Create rule for checking enum list
+ * 
+ * @param {boolean} required Parametr must be defined (default TRUE)
+ * @param {boolean} nullable Parametr can be NULL (default FALSE)
+ * @param {array} content List of variants
+ */
+module.exports.enum = function(required, nullable, content) {
+    return new EnumParam(required, nullable, content);
 }
