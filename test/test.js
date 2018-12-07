@@ -1,55 +1,28 @@
-const validator = require('../src/params-validator');
+const PV = require('../src/params-validator');
 
-let strValidator = validator.str(true, false, 0, 64)
-try {
-    console.log(strValidator.check('sdfgdfgsdfgd'));
-} catch(e) {
-    console.log(e.message);
+let inputParams = {
+    title: 'ParamsValidator',
+    version: '1',
+    inProduction: false,
+    is_support: 'num',
+    something: 'не должно быть во входящих'
+
 }
 
-let numValidator = validator.num(true, true, 0, 100);
-try {
-    console.log(numValidator.check(34));
-} catch(e) {
-    console.log(e.message);
-}
+let checker = PV.obj(true, false, {      // Объект, обязателелен, не может быть NULL
+    title: PV.str(true, true, 1, 64),  // Строка, обязательна, может быть NULL, от 1 до 64 символов
+    version: PV.num(false, false, 1),   // Число, не обязательно, не менее 1-го
+    inProduction: PV.bool(true, false),  // Булевый параметр, обязателен, не может быть NULL
+    is_support: PV.enum(false, false, ['str','num','arr','obj','bool','enum'])  // Одно из возможных значений, не обязательно, не может быть NULL
+})
 
-let boolValidator = validator.bool(true, false);
-try {
-    console.log(boolValidator.check(true));
-} catch(e) {
-    console.log(e.message);
-}
-
-let arrValidator = validator.arr(true, true, 1, 4, validator.num(true, true, 1, 15));
+var checkedParams;
 
 try {
-    console.log(arrValidator.check([12, 14, null]));
-} catch(e) {
-    console.log(e.message);
+    checkedParams = checker.check(inputParams);
+} catch (e) {
+    console.log("Ошибка: " + e.message);
+    return;
 }
 
-let objValidator = validator.obj(true, true, {
-    title: strValidator,
-    age: numValidator,
-    description: validator.str(false, false, 0, 1024)
-});
-
-
-try {
-    console.log(objValidator.check({
-        title: 'Roman',
-        age: 34,
-        description: ''
-    }));
-} catch(e) {
-    console.log(e.message);
-}
-
-let enumValidator = validator.enum(true, true, ['red', 'blue', 'white']);
-
-try {
-    console.log(enumValidator.check('brown'));
-} catch(e) {
-    console.log(e.message);
-}
+console.log("Выходной результат\n", checkedParams);
