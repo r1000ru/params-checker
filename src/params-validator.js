@@ -38,11 +38,6 @@ var EnumParam = function(required, nullable, content) {
     this._content = content;
 }
 
-var EsetParam = function(required, nullable, content) {
-    this._required = required;
-    this._nullable = nullable;
-    this._content = content;
-}
 
 StringParam.prototype.check = function(param, key) {
     key = key || 'Param';
@@ -241,36 +236,6 @@ EnumParam.prototype.check = function(param, key) {
     return param;
 }
 
-EsetParam.prototype.check = function(param, key) {
-    key = key || 'Param';
-    // Если параметр не передан
-    if (param === undefined) {
-        if (this._required) {
-            throw new Error(key + ' is required');
-        }
-        return param;
-    }
-
-    // Если параметр равен null
-    if (param === null) {
-        if (!this._nullable) {
-            throw new Error(key + ' is not nullable');
-        }
-        return null;
-    }
-
-    if (!Array.isArray(param)) {
-        throw new Error(key + ' must be array');
-    }
-
-    for (var k in param) {
-        if (this._content.indexOf(param[k]) === -1) {
-            throw new Error('Params ' + key + ', value ' + param[k] + ' is not in eset list');
-        }
-    }
-
-    return param;
-}
 
 /**
  * Create rule for checking string
@@ -342,13 +307,3 @@ module.exports.enum = function(required, nullable, content) {
     return new EnumParam(required, nullable, content);
 }
 
-/**
- * Create rule for checking eset list
- * 
- * @param {boolean} required Parametr must be defined (default TRUE)
- * @param {boolean} nullable Parametr can be NULL (default FALSE)
- * @param {array} content List of variants
- */
-module.exports.eset = function(required, nullable, content) {
-    return new EsetParam(required, nullable, content);
-}
