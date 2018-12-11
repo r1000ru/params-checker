@@ -1,14 +1,18 @@
 {
-  "name": "params-validator",
-  "version": "1.0.0",
+  "name": "params-checker",
+  "version": "0.1.0",
   "description": "Библиотека для проверки параметров",
-  "main": "./src/params-validator.js",
+  "main": "./src/params-checker.js",
   "directories": {
     "test": "test"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/r1000ru/params-checker.git"
+},
   "scripts": {
-    "test": "node ./test/test.js"
+    "demo": "node ./demo/demo.js"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Roman Sorokin <mail@r1000.ru>",
+  "license": "MIT"
 }
