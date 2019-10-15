@@ -1,6 +1,6 @@
 {
   "name": "params-checker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Библиотека для проверки параметров",
   "main": "./src/params-checker.js",
   "directories": {

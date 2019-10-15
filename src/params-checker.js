@@ -197,6 +197,11 @@ ObjectParam.prototype.check = function(param, key) {
         throw new Error(key + ' must be object');
     }
 
+    // Если нет вложенных свойств - возвращаем все
+    if (!this._content) {
+        return param;
+    }
+
     var result = {};
 
     // Проверяем каждое свойство объекта
