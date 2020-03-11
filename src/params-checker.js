@@ -38,6 +38,11 @@ var EnumParam = function(required, nullable, content) {
     this._content = content;
 }
 
+var AnyParam = function(required, nullable, content) {
+    this._required = required;
+    this._nullable = nullable;
+    this._content = content;
+}
 
 StringParam.prototype.check = function(param, key) {
     key = key || 'Param';
@@ -241,6 +246,27 @@ EnumParam.prototype.check = function(param, key) {
     return param;
 }
 
+AnyParam.prototype.check = function(param, key) {
+    key = key || 'Param';
+    // Если параметр не передан
+    if (param === undefined) {
+        if (this._required) {
+            throw new Error(key + ' is required');
+        }
+        return param;
+    }
+
+    // Если параметр равен null
+    if (param === null) {
+        if (!this._nullable) {
+            throw new Error(key + ' is not nullable');
+        }
+        return null;
+    }
+
+    return param;
+}
+
 
 /**
  * Create rule for checking string
@@ -310,5 +336,9 @@ module.exports.obj = function(required, nullable, content) {
  */
 module.exports.enum = function(required, nullable, content) {
     return new EnumParam(required, nullable, content);
+}
+
+module.exports.any = function(required, nullable, content) {
+    return new AnyParam(required, nullable, content);
 }
 
